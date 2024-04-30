@@ -8,17 +8,21 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SessionService } from 'src/app/services/session.service';
 
 import { MeComponent } from './me.component';
+import { provideRouter } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 describe('MeComponent', () => {
   let component: MeComponent;
   let fixture: ComponentFixture<MeComponent>;
+  let userService: UserService;
+  let sessionService: SessionService;
 
   const mockSessionService = {
     sessionInformation: {
       admin: true,
-      id: 1
-    }
-  }
+      id: 1,
+    },
+  };
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MeComponent],
@@ -28,18 +32,32 @@ describe('MeComponent', () => {
         MatCardModule,
         MatFormFieldModule,
         MatIconModule,
-        MatInputModule
+        MatInputModule,
       ],
       providers: [{ provide: SessionService, useValue: mockSessionService }],
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MeComponent);
     component = fixture.componentInstance;
+
+    userService = TestBed.inject(UserService);
+    sessionService = TestBed.inject(SessionService);
+
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should returns', () => {
+    // Given
+    jest.spyOn(window.history, 'back');
+
+    // When
+    component.back();
+
+    // Then
+    expect(window.history.back).toBeCalled();
   });
 });

@@ -42,5 +42,17 @@ describe('DetailComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should returns', () => {
+    // Given
+    jest.spyOn(window.history, 'back');
+
+    // When
+    component.back();
+
+    // Then
+    expect(window.history.back).toBeCalled();
+  });
+  
 });
 
