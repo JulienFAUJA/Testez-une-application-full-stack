@@ -9,12 +9,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { expect } from '@jest/globals';
 import { SessionService } from 'src/app/services/session.service';
-
+import { AuthService } from '../../services/auth.service';
+import { of, throwError } from 'rxjs';
+import { catchError, delay } from 'rxjs/operators';
 import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let authService: AuthService;
+  let sessionService: SessionService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -33,10 +37,13 @@ describe('LoginComponent', () => {
       .compileComponents();
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    authService = TestBed.inject(AuthService);
+    sessionService = TestBed.inject(SessionService);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });
