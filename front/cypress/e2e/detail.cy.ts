@@ -1,13 +1,22 @@
 ///<reference types="Cypress"/>
 
 describe('Edite sessesion spec', () => {
-  const user = {
-    id: 1,
-    username: 'yoga@studio.com',
-    firstName: 'Admin',
-    lastName: 'Admin',
-    admin: true,
-  };
+  const users = [
+    {
+      id: 1,
+      username: 'yoga@studio.com',
+      firstName: 'Admin',
+      lastName: 'Admin',
+      admin: true,
+    },
+    {
+      id: 2,
+      username: 'julienfaujanet@email.com',
+      firstName: 'Julien',
+      lastName: 'Faujanet',
+      admin: false,
+    },
+  ];
   const sessions = [
     {
       id: 1,
@@ -15,7 +24,7 @@ describe('Edite sessesion spec', () => {
       date: 1711200995547,
       teacher_id: 1,
       description: 'première session de yoga',
-      users: [],
+      users: [2],
       createdAt: [2024, 5, 6, 11, 26, 20],
       updatedAt: [2024, 5, 6, 11, 26, 20],
     },
@@ -58,11 +67,11 @@ describe('Edite sessesion spec', () => {
     },
   ];
 
-  beforeEach(() => {
+  const login = (isAdmin) => {
     cy.visit('/login');
 
     cy.intercept('POST', '/api/auth/login', {
-      body: user,
+      body: isAdmin ? users[0] : users[1],
     });
 
     cy.intercept('GET', '/api/session', {
@@ -86,9 +95,10 @@ describe('Edite sessesion spec', () => {
     );
 
     cy.url().should('include', '/sessions');
-  });
+  };
 
   it('Detail', () => {
+    login(true);
     cy.contains('Rentals available').should('be.visible');
 
     cy.contains('Detail').should('be.visible').click();
@@ -96,5 +106,19 @@ describe('Edite sessesion spec', () => {
     cy.url().should('include', '/sessions/detail/1');
 
     cy.contains('Delete').should('be.visible');
+  });
+
+  it('Participates', () => {
+    login(false);
+    cy.contains('Rentals available').should('be.visible');
+
+    cy.contains('Detail').should('be.visible').click();
+
+    cy.url().should('include', '/sessions/detail/1');
+
+    cy.contains('Do not Participate').should('be.visible').click();
+
+
+    cy.contains('Participate').should('be.visible');
   });
 });
