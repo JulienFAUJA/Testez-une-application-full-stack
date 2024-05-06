@@ -1,3 +1,5 @@
+///<reference types="Cypress"/>
+
 describe('Edite sessesion spec', () => {
   const user = {
     id: 1,

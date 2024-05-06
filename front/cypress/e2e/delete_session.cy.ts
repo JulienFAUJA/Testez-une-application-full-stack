@@ -1,3 +1,4 @@
+/// <reference types="Cypress" />
 describe('Delete sessesion spec', () => {
   it('Delete succeed', () => {
     const user = {
@@ -31,12 +32,12 @@ describe('Delete sessesion spec', () => {
     ];
 
     const teacher = {
-        id: 1,
-        lastName: 'DELAHAYE',
-        firstName: 'Margot',
-        createdAt: [2024, 4, 23, 14, 41, 51],
-        updatedAt: [2024, 4, 23, 14, 41, 51],
-      };
+      id: 1,
+      lastName: 'DELAHAYE',
+      firstName: 'Margot',
+      createdAt: [2024, 4, 23, 14, 41, 51],
+      updatedAt: [2024, 4, 23, 14, 41, 51],
+    };
 
     cy.visit('/login');
 
@@ -71,8 +72,6 @@ describe('Delete sessesion spec', () => {
 
     cy.url().should('include', '/sessions');
 
-    /* ======================== */
-
     cy.contains('Rentals available').should('be.visible');
 
     cy.contains('Detail').should('be.visible').click();
@@ -91,8 +90,7 @@ describe('Delete sessesion spec', () => {
 
     cy.url().should('include', '/sessions/detail/1');
 
-    cy.contains('Delete').should('be.visible').click();;
-
+    cy.contains('Delete').should('be.visible').click();
 
     cy.wait('@deleteSession').then((interception) => {
       // Vérifier que la requête a été interceptée avec succès
