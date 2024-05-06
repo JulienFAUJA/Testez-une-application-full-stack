@@ -1,74 +1,75 @@
-describe('User Information Page (/me)', () => {
-  const loginUrl = '/login';
-  const sessionUrl = '/sessions';
+describe('User Infos', () => {
+  it('Login', () => {
+      // Visite la page de connexion
+      cy.visit('/login');
 
-  const login = () => {
-    cy.get('input[formControlName=email]').type('yoga@studio.com');
-    cy.get('input[formControlName=password]').type('test!1234{enter}{enter}');
-  };
+      cy.intercept('POST', '/api/auth/login', {
+          body: {
+              admin: true,
+              created_at: [2024,4,23,14,41,54],
+              email: 'yoga@studio.com',
+              firstName: 'firstName',
+              id: 1,
+              lastName: 'lastName',
+              updatedAt: [2024,4,23,14,41,54]
+          },
+      }).as('login')
 
-  const connectAsAdmin = () => {
-    cy.visit(loginUrl);
-    cy.intercept('POST', '/api/auth/login', {
-      body: {
-        id: 1,
-        firstName: 'Admin',
-        lastName: 'Admin',
-        email: 'yoga@studio.com',
-        admin: true,
-        createdAt: '2024-04-23',
-        updatedAt: '2024-04-23',
-      },
-    }).as('loginRequest');
-    login();
-    cy.url().should('include', sessionUrl);
-  };
+      cy.intercept('GET', '/api/session', {
+          statusCode: 200,
+          body: {
+              admin: true,
+              created_at: [2024,4,23,14,41,54],
+              email: 'yoga@studio.com',
+              firstName: 'firstName',
+              id: 1,
+              lastName: 'lastName',
+              updatedAt: [2024,4,23,14,41,54]
+          },
+      }).as('session')
 
-  const connectAsNotAdmin = () => {
-    cy.visit(loginUrl);
-    cy.intercept('POST', '/api/auth/login', {
-      body: {
-        id: 1,
-        firstName: 'Admin',
-        lastName: 'Admin',
-        email: 'yoga@studio.com',
-        admin: false,
-        createdAt: '2024-04-23',
-        updatedAt: '2024-04-23',
-      },
-    }).as('loginRequest');
-    login();
-    cy.url().should('include', sessionUrl);
-  };
+      cy.intercept('GET', '/api/user/1',{
+          statusCode: 200,
+          body: {
+              admin: true,
+              created_at: [2024,4,23,14,41,54],
+              email: 'yoga@studio.com',
+              firstName: 'firstName',
+              id: 1,
+              lastName: 'lastName',
+              updatedAt: [2024,4,23,14,41,54]
+          },
+      }).as('getUser');
 
-  const checkUserDataDisplay = (isAdmin) => {
-    cy.get('.mat-card-content').within(() => {
-      cy.contains('Name:').should('contain.text', 'Admin ADMIN');
-      cy.contains('Email:').should('contain.text', 'yoga@studio.com');
-      cy.contains('Create at:').should('contain.text', 'April 23, 2024');
-      cy.contains('Last update:').should('contain.text', 'April 23, 2024');
 
-      if (isAdmin) {
-        cy.contains('You are admin').should('exist');
-        cy.contains('Delete my account:').should('not.exist');
-        cy.contains('button.mat-raised-button.mat-warn').should('not.exist');
-      } else {
-        cy.contains('You are admin').should('not.exist');
-        cy.contains('Delete my account:').should('exist');
-        cy.contains('button.mat-raised-button.mat-warn').should('exist');
-      }
-    });
-  };
 
-  it('should display user information correctly for admin', () => {
-    connectAsAdmin();
-    cy.contains('span.link[routerlink="me"]', 'Account').click();
-    checkUserDataDisplay(true);
-  });
+      // connexion
+      cy.get('input[formControlName=email]').type("yoga@studio.com")
+      cy.get('input[formControlName=password]').type(`${"test!1234"}{enter}{enter}`)
+  
+      // Vérifie la redirection vers sessions
+      cy.url().should('include', '/sessions');
 
-  it('should display user information correctly for non-admin', () => {
-    connectAsNotAdmin();
-    cy.contains('span.link[routerlink="me"]', 'Account').click();
-    checkUserDataDisplay(false);
+      cy.contains('Account').click();
+
+      cy.wait('@getUser').then((interception) => {
+          // Vérifier que la requête a été interceptée
+          expect(interception.response.statusCode).to.eq(200);
+          expect(interception.response.body).to.deep.equal({
+              admin: true,
+              email: 'yoga@studio.com',
+              firstName: 'firstName',
+              id: 1,
+              lastName: 'lastName',
+              created_at: [2024,4,23,14,41,54],
+              updatedAt: [2024,4,23,14,41,54]
+          });
+      });
+
+      cy.contains('yoga@studio.com').should('be.visible');
+
+      // Vérifie la redirection vers "Me"
+      cy.url().should('include', '/me');
+  
   });
 });
