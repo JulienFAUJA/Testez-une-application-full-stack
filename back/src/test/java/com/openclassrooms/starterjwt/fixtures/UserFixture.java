@@ -17,7 +17,7 @@ public class UserFixture {
 
         User user = new User();
         user.setId(1L);
-        user.setEmail("jonas@example.com");
+        user.setEmail("yoga@test.com");
         user.setLastName("Perger");
         user.setFirstName("Jonas");
         user.setAdmin(false);

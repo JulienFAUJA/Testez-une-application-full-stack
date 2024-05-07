@@ -83,21 +83,6 @@ public class SessionFixture {
 
         return session;
     }
-/*
-    public static SessionDto sessionDTOFixture1() {
-        return SessionDto.builder()
-                .id(1L)
-                .name("Session 1")
-                .date(new Date())
-                .teacher_id(2L)
-                .description("Description of session 1")
-                .users(List.of(1L,2L,3L))
-                .createdAt(now)
-                .updatedAt(now)
-                .build();
-
-    }
-    */
 
 
     public static Session sessionFixture2() {
