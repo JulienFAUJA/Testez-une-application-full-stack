@@ -2,14 +2,19 @@ package com.openclassrooms.starterjwt.fixtures;
 
 import com.openclassrooms.starterjwt.dto.TeacherDto;
 import com.openclassrooms.starterjwt.models.Teacher;
+import lombok.NoArgsConstructor;
 
+import java.text.ParseException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import static lombok.AccessLevel.PRIVATE;
+
+@NoArgsConstructor(access = PRIVATE)
 public class TeacherFixture {
-    public static Teacher teacherFixture1() {
+    public static Teacher teacherFixture1() throws ParseException {
         Clock customClock = Clock.fixed(
                 Instant.parse("2024-05-07T10:25:00Z"),
                 ZoneId.of("UTC"));

@@ -1,5 +1,6 @@
 package com.openclassrooms.starterjwt.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.fixtures.SessionFixture;
 import com.openclassrooms.starterjwt.mapper.SessionMapper;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mock.*;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvc.*;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -41,14 +44,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class SessionControllerTest {
 
-    @MockBean
-    private SessionService sessionService;
+    private SessionService sessionService = mock(SessionService.class);
+    private SessionMapper sessionMapper = mock(SessionMapper.class);
+    private SessionController controller = new SessionController(sessionService, sessionMapper);
 
-    @MockBean
-    private SessionMapper sessionMapper;
-
-    @InjectMocks
-    private SessionController sessionController;
 
     @Autowired
     private MockMvc mockMvc;
@@ -57,62 +56,68 @@ public class SessionControllerTest {
     private SessionDto sessionDto;
 
 
+
+
+    @Test
+    void shouldFindSessionWithValidId() throws ParseException {
+        Session session = SessionFixture.SessionFix();
+        SessionDto sessionDto = SessionFixture.DtoSessionFix();
+        when(sessionService.getById(1L)).thenReturn(session);
+        when(sessionMapper.toDto(session)).thenReturn(sessionDto);
+
+        ResponseEntity<?> responseEntity = controller.findById("1");
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(sessionDto, responseEntity.getBody());
+    }
+
+
     @Test
     @WithMockUser
     void testFindById_SessionExists() {
         // Arrange
         Long sessionId = 1L;
         Session session = SessionFixture.sessionFixture1();
-        SessionDto sessionDto = sessionMapper.toDto(session);
+        SessionDto session_dto= SessionFixture.DtoSessionFix();
         when(sessionService.getById(sessionId)).thenReturn(session);
-        when(sessionDto).thenReturn(SessionFixture.sessionDTOFixture1());
+        when(sessionMapper.toDto(session)).thenReturn(session_dto);
 
         // Act
-        ResponseEntity<?> responseEntity = sessionController.findById(sessionId.toString());
+        ResponseEntity<?> responseEntity = controller.findById(sessionId.toString());
 
         // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(sessionDto, responseEntity.getBody());
+        assertEquals(session_dto, responseEntity.getBody());
         verify(sessionService, times(1)).getById(sessionId);
     }
 
     @Test
     void testFindById_SessionNotFound() {
         // Arrange
-        Long sessionId = 1L;
+        Long sessionId = 10000000L;
         when(sessionService.getById(sessionId)).thenReturn(null);
 
         // Act
-        ResponseEntity<?> responseEntity = sessionController.findById(sessionId.toString());
+        ResponseEntity<?> responseEntity = controller.findById(sessionId.toString());
 
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         verify(sessionService, times(1)).getById(sessionId);
     }
 
-    @Disabled
     @Test
-    void testFindAll() {
-        // Arrange
-        List<Session> sessions = Arrays.asList(SessionFixture.sessionFixture1());
-        List<SessionDto> sessions_dto = Arrays.asList(SessionFixture.sessionDTOFixture1());
+    public void shouldFindAllSessions() throws ParseException {
+        List<Session> sessions = Arrays.asList(SessionFixture.sessionFixture1(), SessionFixture.sessionFixture2());
+        List<SessionDto> sessionDtos = Arrays.asList(SessionFixture.DtoSessionFix(), SessionFixture.sessionDTOFixture2());
+
         when(sessionService.findAll()).thenReturn(sessions);
 
-        List<SessionDto> sessionsDtoList = new ArrayList<>();
+        when(sessionMapper.toDto(sessions)).thenReturn(sessionDtos);
 
-        for (Session session : sessions) {
-            sessionsDtoList.add(sessionMapper.toDto(session));
-        }
+        ResponseEntity<?> responseEntity = controller.findAll();
 
-        when(sessionMapper.toDto(sessions.get(0))).thenReturn(sessions_dto.get(0));
-
-        // Act
-        ResponseEntity<?> responseEntity = sessionController.findAll();
-
-        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(sessionsDtoList, responseEntity.getBody());
-        verify(sessionService, times(1)).findAll();
+        assertEquals(sessionDtos, responseEntity.getBody());
     }
 
 
