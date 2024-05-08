@@ -49,7 +49,7 @@ public class AuthControllerTest {
         UserDetailsImpl userDetails = new UserDetailsImpl(1L, "yoga@test.com", "Julien", "Faujanet", false, "mot de passe");
         when(authenticationManager.authenticate(any())).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(userDetails);
-        when(jwtUtils.generateJwtToken(authentication)).thenReturn("azerty");
+        when(jwtUtils.generateJwtToken(authentication)).thenReturn("encodePassword");
 
         ResponseEntity<?> response = controller.authenticateUser(loginRequest);
 

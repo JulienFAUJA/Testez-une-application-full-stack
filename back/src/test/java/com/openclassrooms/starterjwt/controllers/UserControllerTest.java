@@ -1,13 +1,10 @@
 package com.openclassrooms.starterjwt.controllers;
 
-import com.openclassrooms.starterjwt.controllers.UserController;
+import com.openclassrooms.starterjwt.dto.UserDto;
 import com.openclassrooms.starterjwt.fixtures.UserFixture;
 import com.openclassrooms.starterjwt.mapper.UserMapper;
 import com.openclassrooms.starterjwt.models.User;
-import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 import com.openclassrooms.starterjwt.services.UserService;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,11 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -32,34 +24,29 @@ public class UserControllerTest {
     @Mock
     private UserMapper userMapper;
 
-    @Mock
-    private SecurityContext securityContext;
 
     @InjectMocks
     private UserController userController;
 
 
-    @Disabled("Pour tester ce tag...")
     @Test
     public void testFindById_UserExists() {
-        // Arrange
-        Long userId = 1L;
+
         User user = UserFixture.userFixture1();
-        User user2 = userService.findById(userId);
-        when(userMapper.toDto(user2)).thenReturn(UserFixture.userDTOFixture1());
+        UserDto userDto = UserFixture.userDTOFixture1();
+        when(userService.findById(1L)).thenReturn(user);
+        when(userMapper.toDto(user)).thenReturn(userDto);
 
-        // Act
-        ResponseEntity<?> responseEntity = userController.findById(userId.toString());
+        ResponseEntity<?> responseEntity = userController.findById("1");
 
-        // Assert
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(user, responseEntity.getBody());
-        verify(userService, times(1)).findById(userId);
+        assertEquals(userDto, responseEntity.getBody());
+
     }
 
     @Test
     void testFindById_UserNotFound() {
-        Long userId = 1L;
+        Long userId = 1000L;
         when(userService.findById(userId)).thenReturn(null);
 
         ResponseEntity<?> response = userController.findById(userId.toString());

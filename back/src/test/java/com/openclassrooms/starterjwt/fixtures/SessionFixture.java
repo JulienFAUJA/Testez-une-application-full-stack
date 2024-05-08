@@ -20,10 +20,11 @@ import java.util.List;
 @NoArgsConstructor(access = PRIVATE)
 
 public class SessionFixture {
+    static String date_str = new String("2024-02-06T16:30:00Z");
     static Clock customClock = Clock.fixed(
-            Instant.parse("2024-02-06T16:30:00Z"),
+            Instant.parse(date_str),
             ZoneId.of("UTC"));
-    static LocalDateTime now = LocalDateTime.ofInstant(customClock.instant(), ZoneId.systemDefault());
+    static LocalDateTime now = LocalDateTime.ofInstant(customClock.instant(), ZoneId.of("UTC"));
 
 
 
@@ -31,7 +32,7 @@ public class SessionFixture {
         SessionDto sessionDto = new SessionDto();
         sessionDto.setId(1L);
         sessionDto.setName("Nom de la session");
-        sessionDto.setDate(new Date()); // Utilisez la date actuelle ou une date spécifique
+        sessionDto.setDate(Date.from(Instant.parse(date_str)));
         sessionDto.setTeacher_id(1L);
         sessionDto.setDescription("Description de la session");
 
@@ -51,10 +52,10 @@ public class SessionFixture {
     public static Session SessionFix() {
         return Session.builder()
                 .id(2L)
-                .name("jeanne")
-                .date(new Date())
+                .name("Nom de la session 2")
+                .date(Date.from(Instant.parse(date_str)))
                 .teacher(new Teacher())
-                .description("Description de jeanne")
+                .description("Description de la session")
                 .users(List.of(new User()))
                 .createdAt(now)
                 .updatedAt(now)
@@ -65,15 +66,12 @@ public class SessionFixture {
 
 
     public static Session sessionFixture1() {
-        Clock customClock = Clock.fixed(
-                Instant.parse("2024-05-07T10:25:00Z"),
-                ZoneId.of("UTC"));
-        LocalDateTime now = LocalDateTime.ofInstant(customClock.instant(), ZoneId.systemDefault());
+
 
         Session session = new Session();
         session.setId(1L);
-        session.setName("Session 1");
-        session.setDate(Date.from(Instant.parse("2024-05-07T10:25:00Z")));
+        session.setName("Nom de la session");
+        session.setDate(Date.from(Instant.parse(date_str)));
         session.setDescription("Description of session 1");
         //session.setTeacher(TeacherFixture.teacherFixture1());
         session.setUsers(List.of(UserFixture.userFixture1(),  UserFixture.userFixture2()));
@@ -87,14 +85,14 @@ public class SessionFixture {
 
     public static Session sessionFixture2() {
         Clock customClock = Clock.fixed(
-                Instant.parse("2024-02-11T22:58:00Z"),
+                Instant.parse(date_str),
                 ZoneId.of("UTC"));
         LocalDateTime now = LocalDateTime.ofInstant(customClock.instant(), ZoneId.systemDefault());
 
         Session session = new Session();
         session.setId(2L);
         session.setName("Session 2");
-        session.setDate(Date.from(Instant.parse("2024-02-11T22:58:00Z")));
+        session.setDate(Date.from(Instant.parse(date_str)));
         session.setDescription("Description of session 2");
         //session.setTeacher(TeacherFixture.teacherFixture1());
         session.setUsers(List.of(UserFixture.userFixture1(),  UserFixture.userFixture2()));
@@ -109,7 +107,7 @@ public class SessionFixture {
         SessionDto sessionDto = new SessionDto();
         sessionDto.setId(2L);
         sessionDto.setName("Nom de la session 2");
-        sessionDto.setDate(new Date());
+        sessionDto.setDate(Date.from(Instant.parse(date_str)));
         sessionDto.setTeacher_id(2L);
         sessionDto.setDescription("Description de la session 2");
 

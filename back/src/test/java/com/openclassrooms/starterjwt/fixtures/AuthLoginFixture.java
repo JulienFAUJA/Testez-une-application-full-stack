@@ -6,8 +6,8 @@ public class AuthLoginFixture {
 
     public static LoginRequest testLoginRequest() {
         LoginRequest newLoginRequest = new LoginRequest();
-        newLoginRequest.setEmail("yoga@test.com");
-        newLoginRequest.setPassword("test123");
+        newLoginRequest.setEmail("yoga@studio.com");
+        newLoginRequest.setPassword("test!1234");
 
         return newLoginRequest;
     }
