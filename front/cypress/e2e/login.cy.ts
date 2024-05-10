@@ -1,4 +1,3 @@
-///<reference types="Cypress"/>
 
 describe('Login spec', () => {
   it('Login failed no password', () => {
@@ -41,7 +40,7 @@ describe('Login spec', () => {
     cy.contains('An error occurred');
   });
 
-  it('Login failed no feilds', () => {
+  it('Login failed no fields', () => {
     cy.visit('/login');
 
     cy.intercept('POST', '/api/auth/login', {

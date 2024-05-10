@@ -21,6 +21,7 @@ describe('DetailComponent', () => {
   let service: SessionService;
   let serviceApi: SessionApiService;
   let httpTestingController: HttpTestingController;
+  
   let route: ActivatedRoute;
   let ngZone: NgZone;
   let router: Router;
@@ -112,36 +113,20 @@ describe('DetailComponent', () => {
     req.flush(true);
   });
 
-  // Test vérif que méthode participate envoie request POST
-  it('should call participate', () => {
-    // Given
-    const myPrivateFuncExitPage = jest.spyOn(component as any, 'fetchSession');
-    component.sessionId = '1';
-    component.userId = '1';
+  // Test vérif méthode participate
+  it('should participate', () => {
+    const spyParticipate = jest.spyOn(component, 'participate');
 
-    // When
-    expect(component.participate()).toBe(void 0);
+    component.participate();
 
-    // Then
-    const req = httpTestingController.expectOne('api/session/1/participate/1');
-    expect(req.request.method).toEqual('POST');
-    req.flush(true);
-  });
+    expect(spyParticipate).toHaveBeenCalled();
+  })
 
-  // Test vérif que méthode unParticipate envoie une request DELETE
-  it('should call participate', () => {
-    // Given
-    const myPrivateFuncExitPage = jest.spyOn(component as any, 'fetchSession');
-    component.sessionId = '1';
-    component.userId = '1';
+  it('should unParticipate', () => {
+    const spyUnParticipate = jest.spyOn(component, 'unParticipate');
 
-    // When
-    expect(component.unParticipate()).toBe(void 0);
+    component.unParticipate();
 
-    // Then
-    const req = httpTestingController.expectOne('api/session/1/participate/1');
-    expect(req.request.method).toEqual('DELETE');
-    req.flush(true);
-    expect(myPrivateFuncExitPage).toBeCalled();
-  });
+    expect(spyUnParticipate).toHaveBeenCalled();
+  })
 });

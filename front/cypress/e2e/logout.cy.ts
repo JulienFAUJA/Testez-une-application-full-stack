@@ -1,4 +1,3 @@
-///<reference types="Cypress"/>
 
 describe('Logout spec', () => {
   it('Logout successfull', () => {

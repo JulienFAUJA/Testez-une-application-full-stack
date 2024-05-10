@@ -1,44 +1,44 @@
-/// <reference types="Cypress" />
 describe('Delete sessesion spec', () => {
-  it('Delete succeed', () => {
     const user = {
-      id: 1,
-      username: 'yoga@studio.com',
-      firstName: 'Admin',
-      lastName: 'Admin',
-      admin: true,
-    };
-    const sessions = [
-      {
         id: 1,
-        name: 'première session',
-        date: 1711200995547,
-        teacher_id: 1,
-        description: 'première session de yoga',
-        users: [],
-        createdAt: [2024, 5, 6, 11, 26, 20],
-        updatedAt: [2024, 5, 6, 11, 26, 20],
-      },
-      {
-        id: 2,
-        name: 'deuxième session',
-        date: 1711200995547,
-        teacher_id: 2,
-        description: 'deuxième session de yoga',
-        users: [],
-        createdAt: [2024, 5, 6, 11, 28, 55],
-        updatedAt: [2024, 5, 6, 11, 28, 55],
-      },
-    ];
-
-    const teacher = {
-      id: 1,
-      lastName: 'DELAHAYE',
-      firstName: 'Margot',
-      createdAt: [2024, 4, 23, 14, 41, 51],
-      updatedAt: [2024, 4, 23, 14, 41, 51],
-    };
-
+        username: 'yoga@studio.com',
+        firstName: 'Admin',
+        lastName: 'Admin',
+        admin: true,
+      };
+      const sessions = [
+        {
+          id: 1,
+          name: 'première session',
+          date: 1711200995547,
+          teacher_id: 1,
+          description: 'première session de yoga',
+          users: [],
+          createdAt: [2024, 5, 6, 11, 26, 20],
+          updatedAt: [2024, 5, 6, 11, 26, 20],
+        },
+        {
+          id: 2,
+          name: 'deuxième session',
+          date: 1711200995547,
+          teacher_id: 2,
+          description: 'deuxième session de yoga',
+          users: [],
+          createdAt: [2024, 5, 6, 11, 28, 55],
+          updatedAt: [2024, 5, 6, 11, 28, 55],
+        },
+      ];
+  
+      const teacher = {
+        id: 1,
+        lastName: 'DELAHAYE',
+        firstName: 'Margot',
+        createdAt: [2024, 4, 23, 14, 41, 51],
+        updatedAt: [2024, 4, 23, 14, 41, 51],
+      };
+  
+  it('Delete succeed', () => {
+   
     cy.visit('/login');
 
     cy.intercept('POST', '/api/auth/login', {
@@ -66,8 +66,7 @@ describe('Delete sessesion spec', () => {
     }).as('deleteSession');
 
     cy.get('input[formControlName=email]').type('yoga@studio.com');
-    cy.get('input[formControlName=password]').type(
-      `${'test!1234'}{enter}{enter}`
+    cy.get('input[formControlName=password]').type(`${'test!1234'}{enter}{enter}`
     );
 
     cy.url().should('include', '/sessions');

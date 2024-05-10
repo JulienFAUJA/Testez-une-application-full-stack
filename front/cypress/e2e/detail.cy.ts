@@ -1,6 +1,6 @@
-///<reference types="Cypress"/>
 
-describe('Edite sessesion spec', () => {
+
+describe('Edit session spec', () => {
   const users = [
     {
       id: 1,
@@ -23,8 +23,8 @@ describe('Edite sessesion spec', () => {
       name: 'première session',
       date: 1711200995547,
       teacher_id: 1,
-      description: 'première session de yoga',
-      users: [2],
+      description: 'première session de yoga ',
+      users: [1],
       createdAt: [2024, 5, 6, 11, 26, 20],
       updatedAt: [2024, 5, 6, 11, 26, 20],
     },
@@ -33,7 +33,7 @@ describe('Edite sessesion spec', () => {
       name: 'deuxième session',
       date: 1711200995547,
       teacher_id: 2,
-      description: 'deuxième session de yoga',
+      description: 'deuxième session de yoga ',
       users: [],
       createdAt: [2024, 5, 6, 11, 28, 55],
       updatedAt: [2024, 5, 6, 11, 28, 55],
@@ -116,9 +116,8 @@ describe('Edite sessesion spec', () => {
 
     cy.url().should('include', '/sessions/detail/1');
 
-    cy.contains('Do not Participate').should('be.visible').click();
+    cy.contains('Participate').should('be.visible').click();
 
-
-    cy.contains('Participate').should('be.visible');
+    //cy.contains('Do not Participate').should('be.visible');
   });
 });

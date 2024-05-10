@@ -1,6 +1,6 @@
-///<reference types="Cypress"/>
 
-describe('Edite sessesion spec', () => {
+
+describe('Edit session spec', () => {
   const user = {
     id: 1,
     username: 'yoga@studio.com',
@@ -14,7 +14,7 @@ describe('Edite sessesion spec', () => {
       name: 'première session',
       date: 1711200995547,
       teacher_id: 1,
-      description: 'première session de yoga',
+      description: 'première session de yoga ',
       users: [],
       createdAt: [2024, 5, 6, 11, 26, 20],
       updatedAt: [2024, 5, 6, 11, 26, 20],

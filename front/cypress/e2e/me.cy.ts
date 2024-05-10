@@ -1,4 +1,4 @@
-///<reference types="Cypress"/>
+
 
 describe('User Infos', () => {
   it('Login', () => {
