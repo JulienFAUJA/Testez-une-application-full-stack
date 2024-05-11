@@ -11,6 +11,7 @@ import { MeComponent } from './me.component';
 import { provideRouter } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 
+// Composant utilisateur
 describe('MeComponent', () => {
   let component: MeComponent;
   let fixture: ComponentFixture<MeComponent>;
@@ -23,6 +24,8 @@ describe('MeComponent', () => {
       id: 1,
     },
   };
+
+  // Avant chaque
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MeComponent],
@@ -46,10 +49,12 @@ describe('MeComponent', () => {
     fixture.detectChanges();
   });
 
+  // Création
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  // Bouton retour
   it('should returns', () => {
     // Given
     jest.spyOn(window.history, 'back');

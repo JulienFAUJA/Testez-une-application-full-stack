@@ -30,10 +30,8 @@ public class TeacherServiceTest {
     void testFindAllWithEmptyList() {
         // Arrange
         when(teacherRepository.findAll()).thenReturn(Collections.emptyList());
-
         // Act
         List<Teacher> teachers = teacherService.findAll();
-
         // Assert
         assertEquals(0, teachers.size());
     }
@@ -45,10 +43,8 @@ public class TeacherServiceTest {
         // Arrange
         Long id = 2L;
         when(teacherRepository.findById(id)).thenReturn(Optional.empty());
-
         // Act
         Teacher actualTeacher = teacherService.findById(id);
-
         // Assert
         assertEquals(null, actualTeacher);
     }
@@ -57,7 +53,6 @@ public class TeacherServiceTest {
     void testFindByIdWithNullId() {
         // Arrange & Act
         Teacher actualTeacher = teacherService.findById(null);
-
         // Assert
         assertNull(actualTeacher);
     }
@@ -66,7 +61,6 @@ public class TeacherServiceTest {
     void testFindByIdWithNegativeId() {
         // Arrange & Act
         Teacher actualTeacher = teacherService.findById(-1L);
-
         // Assert
         assertEquals(null, actualTeacher);
     }

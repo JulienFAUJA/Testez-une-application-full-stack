@@ -30,10 +30,8 @@ public class UserServiceTest {
     void DeleteTest() {
         // Arrange
         Long userId = 1L;
-
         // Act
         userService.delete(userId);
-
         // Assert
         verify(userRepository, times(1)).deleteById(userId);
     }
@@ -45,27 +43,20 @@ public class UserServiceTest {
         User expectedUser = new User();
         expectedUser.setId(userId);
         when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
-
         // Act
         User actualUser = userService.findById(userId);
-
         // Assert
         assertEquals(expectedUser, actualUser);
         verify(userRepository, times(1)).findById(userId);
     }
-
-
-
 
     @Test
     void findById_NotFoundTest() {
         // Arrange
         Long userId = 1L;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
-
         // Act
         User actualUser = userService.findById(userId);
-
         // Assert
         assertNull(actualUser);
         verify(userRepository, times(1)).findById(userId);

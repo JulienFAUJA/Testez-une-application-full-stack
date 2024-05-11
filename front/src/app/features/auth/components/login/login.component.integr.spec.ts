@@ -8,12 +8,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 import { SessionInformation } from 'src/app/interfaces/sessionInformation.interface';
 
+// Composant de connexion
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let authService: AuthService;
   let router: Router;
   let sessionService: SessionService;
 
+  // Avant chaque
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -41,6 +43,7 @@ describe('LoginComponent', () => {
     sessionService = TestBed.inject(SessionService);
   });
 
+  // Connexion
   describe('submit', () => {
     it('should call AuthService.login with form values when form is submitted', () => {
       const formValues = {

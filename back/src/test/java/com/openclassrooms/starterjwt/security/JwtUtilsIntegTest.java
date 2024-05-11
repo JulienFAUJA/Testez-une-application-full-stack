@@ -29,12 +29,9 @@ public class JwtUtilsIntegTest {
     void generateJwtToken_Success() {
         UserDetailsImpl userDetails = mock(UserDetailsImpl.class);
         when(userDetails.getUsername()).thenReturn("yoga@test.com");
-
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(userDetails);
-
         String jwtToken = jwtUtils.generateJwtToken(authentication);
-
         assertNotNull(jwtToken);
     }
 
@@ -45,15 +42,12 @@ public class JwtUtilsIntegTest {
                 .setSubject(username)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
-
         String extractedUsername = jwtUtils.getUserNameFromJwtToken(jwtToken);
-
         assertEquals(username, extractedUsername);
     }
 
     @Test
     public void testExpiredToken() {
-
         String username = "testUser";
         long expiredMillis = System.currentTimeMillis() - 1000; // 1 second ago
         String jwtToken = Jwts.builder()
@@ -61,9 +55,7 @@ public class JwtUtilsIntegTest {
                 .setExpiration(new Date(expiredMillis))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
-
         boolean isValid = jwtUtils.validateJwtToken(jwtToken);
-
         assertFalse(isValid);
     }
 }

@@ -31,33 +31,26 @@ public class UserControllerTest {
 
     @Test
     public void testFindById_UserExists() {
-
         User user = UserFixture.userFixture1();
         UserDto userDto = UserFixture.userDTOFixture1();
         when(userService.findById(1L)).thenReturn(user);
         when(userMapper.toDto(user)).thenReturn(userDto);
-
         ResponseEntity<?> responseEntity = userController.findById("1");
-
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(userDto, responseEntity.getBody());
-
     }
 
     @Test
     void testFindById_UserNotFound() {
         Long userId = 1000L;
         when(userService.findById(userId)).thenReturn(null);
-
         ResponseEntity<?> response = userController.findById(userId.toString());
-
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
     void testFindById_InvalidId() {
         ResponseEntity<?> response = userController.findById("invalidId");
-
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
@@ -66,9 +59,7 @@ public class UserControllerTest {
     void testDeleteUser_UserDoesNotExist() {
         Long userId = 99999L;
         when(userService.findById(userId)).thenReturn(null);
-
         ResponseEntity<?> response = userController.save(userId.toString());
-
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(userService, never()).delete(any());
     }
@@ -76,7 +67,6 @@ public class UserControllerTest {
     @Test
     void testDeleteUser_InvalidId() {
         ResponseEntity<?> response = userController.save("invalidId");
-
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         verify(userService, never()).delete(any());
     }

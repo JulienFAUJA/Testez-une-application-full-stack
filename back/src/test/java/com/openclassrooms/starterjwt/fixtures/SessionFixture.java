@@ -58,9 +58,6 @@ public class SessionFixture {
                 .build();
     }
 
-
-
-
     public static Session sessionFixture1() {
         Session session = new Session();
         session.setId(1L);

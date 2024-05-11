@@ -82,11 +82,6 @@ public class SessionControllerIntegrTest {
     }
 
 
-
-
-
-
-
     @Test
     @WithMockUser
     void testFindAll() throws Exception {
@@ -94,8 +89,6 @@ public class SessionControllerIntegrTest {
         List<Session> sessions = Arrays.asList(SessionFixture.sessionFixture1(), SessionFixture.sessionFixture2());
         // Convertir les sessions en DTOs
         List<SessionDto> sessionDtos = Arrays.asList(SessionFixture.DtoSessionFix(), SessionFixture.sessionDTOFixture2());
-
-
 
         // Enregistrer le module JavaTime pour prendre en charge la sérialisation des dates
         ObjectMapper objectMapper = new ObjectMapper();
@@ -124,9 +117,6 @@ public class SessionControllerIntegrTest {
     }
 
 
-
-
-
     @Test
         @WithMockUser
         void testCreate() throws Exception {
@@ -142,7 +132,6 @@ public class SessionControllerIntegrTest {
             when(sessionMapper.toDto(session)).thenReturn(sessionDto);
 
             when(sessionRepository.save(session)).thenReturn(session);
-
 
             mockMvc.perform(post("/api/session")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -160,19 +149,15 @@ public class SessionControllerIntegrTest {
             Session session = SessionFixture.sessionFixture1();
             SessionDto sessionDto = SessionFixture.DtoSessionFix();
             sessionDto.setDescription("Pensez à éteindre vos téléphones");
-
             when(sessionService.update(eq(1L), any(Session.class))).thenReturn(session);
             when(sessionMapper.toDto(any(Session.class))).thenReturn(sessionDto);
-
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
-
             mockMvc.perform(MockMvcRequestBuilders.put("/api/session/1")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(sessionDto)))
                     .andExpect(status().isOk());
         }
-
 
 
     @Nested
@@ -182,12 +167,9 @@ public class SessionControllerIntegrTest {
         public void testDeleteSession() throws Exception {
             long sessionId=1L;
             Session session = SessionFixture.sessionFixture1();
-
             when(sessionService.getById(sessionId)).thenReturn(session);
-
             mockMvc.perform(delete("/api/session/1", sessionId))
                     .andExpect(status().isOk());
-
             verify(sessionService, times(1)).delete(sessionId);
         }
     }
@@ -200,11 +182,9 @@ public class SessionControllerIntegrTest {
             // Mock session ID and user ID
             long sessionId = 1L;
             long userId = 2L;
-
             // Perform the POST request
             mockMvc.perform(post("/api/session/{id}/participate/{userId}", sessionId, userId))
                     .andExpect(status().isOk());
-
             // Verify that the sessionService.participate method was called with the correct session ID and user ID
             verify(sessionService, times(1)).participate(sessionId, userId);
         }
@@ -219,11 +199,9 @@ public class SessionControllerIntegrTest {
             // Mock session ID and user ID
             long sessionId = 1L;
             long userId = 2L;
-
             // Perform the DELETE request
             mockMvc.perform(delete("/api/session/{id}/participate/{userId}", sessionId, userId))
                     .andExpect(status().isOk());
-
             // Verify that the sessionService.noLongerParticipate method was called with the correct session ID and user ID
             verify(sessionService, times(1)).noLongerParticipate(sessionId, userId);
         }

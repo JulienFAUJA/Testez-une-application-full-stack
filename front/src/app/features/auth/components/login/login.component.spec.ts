@@ -14,12 +14,15 @@ import { of, throwError } from 'rxjs';
 import { catchError, delay } from 'rxjs/operators';
 import { LoginComponent } from './login.component';
 
+// Composant de connexion
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: AuthService;
   let sessionService: SessionService;
 
+
+  // Avant chaque
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
@@ -42,6 +45,7 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
+  // Création
   it('should create', () => {
     expect(component).toBeTruthy();
   });

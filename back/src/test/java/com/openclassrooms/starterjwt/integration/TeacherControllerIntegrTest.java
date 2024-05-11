@@ -56,12 +56,9 @@ public class TeacherControllerIntegrTest {
         // Enregistrer le module JavaTime pour prendre en charge la sérialisation des dates
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-
         // Configurer les mocks pour retourner les valeurs attendues
         when(teacherService.findById(id)).thenReturn(teacher);
         when(teacherMapper.toDto(teacher)).thenReturn(teacherDto);
-
-
         when(teacherTestRepository.save(teacher)).thenReturn(teacher);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/teacher/"+id))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -70,7 +67,6 @@ public class TeacherControllerIntegrTest {
     @Test
     @WithMockUser(roles = "USER")
     void shouldNotGetTeacherByIdWhenNotFound() throws Exception {
-
         Long id = 1000L;
         mockMvc.perform(MockMvcRequestBuilders.get("/api/teacher/"+id))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());

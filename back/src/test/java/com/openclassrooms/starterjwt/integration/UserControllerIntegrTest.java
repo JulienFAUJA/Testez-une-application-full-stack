@@ -38,13 +38,10 @@ public class UserControllerIntegrTest {
     void findById_UserExists() throws Exception {
         User user = UserFixture.userFixture1();
         user.setEmail("yoga@test.com");
-
         UserDto userDto = UserFixture.userDTOFixture1();
         userDto.setEmail("yoga@test.com");
-
         when(userService.findById(1L)).thenReturn(user);
         when(userMapper.toDto(user)).thenReturn(userDto);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -55,7 +52,6 @@ public class UserControllerIntegrTest {
     @WithMockUser
     void findById_UserNotFound() throws Exception {
         when(userService.findById(1L)).thenReturn(null);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/1000")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -67,36 +63,6 @@ public class UserControllerIntegrTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/invalidId")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
-    @Disabled
-    @Test
-    @WithMockUser
-    void saveUser_UserExists() throws Exception {
-        User user = UserFixture.userFixture1();
-        UserDto userDto = UserFixture.userDTOFixture1();
-
-        when(userMapper.toEntity(userDto)).thenReturn(user);
-        //when(userService.save(user)).thenReturn(user);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/user")
-                        .content("{ \"id\": 1, \"email\": \"yoga@test.com\", \"lastName\": \"Doe\", \"firstName\": \"John\", \"admin\": false }")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("yoga@test.com"));
-    }
-
-    @Disabled
-    @Test
-    @WithMockUser
-    void deleteUser_UserExists() throws Exception {
-        User user = UserFixture.userFixture1();
-
-        when(userService.findById(1L)).thenReturn(user);
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test

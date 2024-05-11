@@ -66,10 +66,8 @@ public class SessionControllerTest {
         // Arrange
         Long sessionId = 10000000L;
         when(sessionService.getById(sessionId)).thenReturn(null);
-
         // Act
         ResponseEntity<?> responseEntity = controller.findById(sessionId.toString());
-
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         verify(sessionService, times(1)).getById(sessionId);
@@ -79,13 +77,9 @@ public class SessionControllerTest {
     public void shouldFindAllSessions() throws ParseException {
         List<Session> sessions = Arrays.asList(SessionFixture.sessionFixture1(), SessionFixture.sessionFixture2());
         List<SessionDto> sessionDtos = Arrays.asList(SessionFixture.DtoSessionFix(), SessionFixture.sessionDTOFixture2());
-
         when(sessionService.findAll()).thenReturn(sessions);
-
         when(sessionMapper.toDto(sessions)).thenReturn(sessionDtos);
-
         ResponseEntity<?> responseEntity = controller.findAll();
-
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(sessionDtos, responseEntity.getBody());
     }

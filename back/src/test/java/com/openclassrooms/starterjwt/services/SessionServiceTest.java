@@ -37,7 +37,6 @@ public class SessionServiceTest {
     public void participate_WhenSessionOrUserNotFound_ThrowsNotFoundException() {
         when(sessionRepository.findById(anyLong())).thenReturn(Optional.empty());
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
-
         assertThrows(NotFoundException.class, () -> {
             sessionService.participate(1L, 1L);
         });
@@ -53,7 +52,6 @@ public class SessionServiceTest {
         when(session.getUsers()).thenReturn(users);
         when(sessionRepository.findById(anyLong())).thenReturn(Optional.of(session));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-
         assertThrows(BadRequestException.class, () -> {
             sessionService.participate(1L, 1L);
         });
@@ -62,7 +60,6 @@ public class SessionServiceTest {
     @Test
     public void noLongerParticipate_WhenSessionNotFound_ThrowsNotFoundException() {
         when(sessionRepository.findById(anyLong())).thenReturn(Optional.empty());
-
         assertThrows(NotFoundException.class, () -> {
             sessionService.noLongerParticipate(1L, 1L);
         });
@@ -76,7 +73,6 @@ public class SessionServiceTest {
         List<User> users = new ArrayList<>();
         when(session.getUsers()).thenReturn(users);
         when(sessionRepository.findById(anyLong())).thenReturn(Optional.of(session));
-
         assertThrows(BadRequestException.class, () -> {
             sessionService.noLongerParticipate(1L, 1L);
         });

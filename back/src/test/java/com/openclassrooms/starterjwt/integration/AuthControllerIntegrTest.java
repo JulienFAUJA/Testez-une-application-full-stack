@@ -63,10 +63,9 @@ public class AuthControllerIntegrTest {
         mockMvc.perform(mockRequest).andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
-    @Test // Indique que c'est une méthode de test
+    @Test
     public void testLogin_Unauthorized() throws Exception {
         // Given : Aucun utilisateur
-
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("bad@email.com");
         loginRequest.setPassword("ceci est un faux password");
@@ -84,7 +83,6 @@ public class AuthControllerIntegrTest {
         // Crée une requête de connexion avec l'email et le mot de passe de l'utilisateur
         LoginRequest loginRequest = AuthLoginFixture.testLoginRequest();
 
-
         // Convertit la requête de connexion en JSON
         String jsonLoginRequest = new ObjectMapper().writeValueAsString(loginRequest);
 
@@ -97,7 +95,7 @@ public class AuthControllerIntegrTest {
                 .andExpect(jsonPath("$.token", is(notNullValue()))); // Vérifie que le token dans la réponse n'est pas null
     }
 
-    @Test // Indique que c'est une méthode de test
+    @Test
     public void testRegister_BadRequest() throws Exception {
         // Given : Une requête d'inscription avec des informations invalides
         // Crée une requête d'inscription sans prénom, sans nom, avec un email invalide et un mot de passe trop court
@@ -130,7 +128,7 @@ public class AuthControllerIntegrTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    
+
 
 
 
