@@ -1,12 +1,9 @@
 package com.openclassrooms.starterjwt.fixtures;
-
 import com.openclassrooms.starterjwt.dto.SessionDto;
-import com.openclassrooms.starterjwt.dto.UserDto;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
 import com.openclassrooms.starterjwt.models.User;
 import lombok.NoArgsConstructor;
-
 import static lombok.AccessLevel.PRIVATE;
 import java.time.Clock;
 import java.time.Instant;
@@ -18,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor(access = PRIVATE)
-
 public class SessionFixture {
     static String date_str = new String("2024-02-06T16:30:00Z");
     static Clock customClock = Clock.fixed(
@@ -66,14 +62,11 @@ public class SessionFixture {
 
 
     public static Session sessionFixture1() {
-
-
         Session session = new Session();
         session.setId(1L);
         session.setName("Nom de la session");
         session.setDate(Date.from(Instant.parse(date_str)));
         session.setDescription("Description of session 1");
-        //session.setTeacher(TeacherFixture.teacherFixture1());
         session.setUsers(List.of(UserFixture.userFixture1(),  UserFixture.userFixture2()));
 
         session.setCreatedAt(now);

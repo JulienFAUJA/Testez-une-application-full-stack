@@ -1,6 +1,4 @@
 package com.openclassrooms.starterjwt.integration;
-
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.openclassrooms.starterjwt.controllers.AuthController;
@@ -49,7 +47,6 @@ public class AuthControllerIntegrTest {
 
 
     @Test
-
     void testAuthenticateUser() throws Exception {
         LoginRequest loginRequest = testLoginRequest();
         ObjectMapper objectMapper = new ObjectMapper();

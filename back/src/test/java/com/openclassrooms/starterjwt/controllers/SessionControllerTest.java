@@ -1,5 +1,4 @@
 package com.openclassrooms.starterjwt.controllers;
-
 import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.fixtures.SessionFixture;
 import com.openclassrooms.starterjwt.mapper.SessionMapper;
@@ -15,11 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -31,14 +28,6 @@ public class SessionControllerTest {
     private SessionService sessionService = mock(SessionService.class);
     private SessionMapper sessionMapper = mock(SessionMapper.class);
     private SessionController controller = new SessionController(sessionService, sessionMapper);
-
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    private Session session;
-    private SessionDto sessionDto;
-
 
 
 
