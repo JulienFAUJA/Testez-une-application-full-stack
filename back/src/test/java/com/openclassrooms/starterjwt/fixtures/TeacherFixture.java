@@ -22,8 +22,8 @@ public class TeacherFixture {
 
         Teacher teacher = new Teacher();
         teacher.setId(1L);
-        teacher.setFirstName("Jonas");
-        teacher.setLastName("Perger");
+        teacher.setFirstName("Margot");
+        teacher.setLastName("DELAHAYE");
         teacher.setCreatedAt(now);
         teacher.setUpdatedAt(now);
 
@@ -38,8 +38,8 @@ public class TeacherFixture {
 
         TeacherDto teacher = new TeacherDto();
         teacher.setId(1L);
-        teacher.setFirstName("Jonas");
-        teacher.setLastName("Perger");
+        teacher.setFirstName("Margot");
+        teacher.setLastName("DELAHAYE");
         teacher.setCreatedAt(now);
         teacher.setUpdatedAt(now);
 

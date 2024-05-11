@@ -1,30 +1,37 @@
 package com.openclassrooms.starterjwt.integration;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.openclassrooms.starterjwt.controllers.AuthController;
+import com.openclassrooms.starterjwt.fixtures.AuthLoginFixture;
 import com.openclassrooms.starterjwt.fixtures.AuthSignupRequestTest;
+import com.openclassrooms.starterjwt.mapper.UserMapper;
 import com.openclassrooms.starterjwt.payload.request.LoginRequest;
 import com.openclassrooms.starterjwt.payload.request.SignupRequest;
-import com.openclassrooms.starterjwt.repository.UserRepository;
-import com.openclassrooms.starterjwt.security.jwt.JwtUtils;
+import com.openclassrooms.starterjwt.repository.UserTestRepository;
+import com.openclassrooms.starterjwt.services.UserService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Random;
 
 import static com.openclassrooms.starterjwt.fixtures.AuthLoginFixture.testLoginRequest;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,60 +39,98 @@ public class AuthControllerIntegrTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private AuthenticationManager authenticationManager = mock(AuthenticationManager.class);
 
-    @Mock
-    private JwtUtils jwtUtils;
+    @MockBean
+    private UserService userService;
 
-    @Mock
-    private UserRepository userRepository;
+    @MockBean
+    private UserMapper userMapper;
 
-    @InjectMocks
-    private AuthController controller;
+    @MockBean
+    private UserTestRepository userTestRepository;
 
     private PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
 
-
     @Test
-    void testAuthenticateUser() throws Exception {
+    void loginWithBadPasswordLoginShouldFail() throws Exception {
+
         LoginRequest loginRequest = testLoginRequest();
         ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println("loginn:"+objectMapper.writeValueAsString(loginRequest));
+        loginRequest.setPassword("12340000");
+        String content = objectMapper.writeValueAsString(loginRequest);
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).content(content);
+        mockMvc.perform(mockRequest).andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
 
+    @Test // Indique que c'est une méthode de test
+    public void testLogin_Unauthorized() throws Exception {
+        // Given : Aucun utilisateur
+
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail("bad@email.com");
+        loginRequest.setPassword("ceci est un faux password");
+        String jsonLoginRequest = new ObjectMapper().writeValueAsString(loginRequest);
+        // When
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk());
+                        .content(jsonLoginRequest))
+                // Then
+                .andExpect(status().isUnauthorized());
     }
-
 
     @Test
-    public void testRegisterUser_SuccessfulRegistration() throws Exception {
+    public void testLogin_Success() throws Exception {
+        // Crée une requête de connexion avec l'email et le mot de passe de l'utilisateur
+        LoginRequest loginRequest = AuthLoginFixture.testLoginRequest();
 
-        SignupRequest register_user = AuthSignupRequestTest.testSignUpRequestFakeEmail();
-        // Créer une instance de la classe Random
-        Random random = new Random();
-        // Générer un nombre aléatoire entre 1000 et 9999 pour le suffixe de l'email
-        int rnd = random.nextInt(9000) + 1000;
-        // Concaténer le suffixe aléatoire avec l'adresse email
-        String email_suffix = "@test.com";
-        register_user.setEmail("toto" + rnd + email_suffix);
 
-        when(userRepository.existsByEmail(register_user.getEmail())).thenReturn(false);
-        when(passwordEncoder.encode(register_user.getPassword())).thenReturn("encodedPassword");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        //System.out.println("register_res:"+objectMapper.writeValueAsString(register_user));
+        // Convertit la requête de connexion en JSON
+        String jsonLoginRequest = new ObjectMapper().writeValueAsString(loginRequest);
 
-        mockMvc.perform(post("/api/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(register_user)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("User registered successfully!"))
-                .andReturn();
+        // When
+        mockMvc.perform(post("/api/auth/login") // Effectue une requête POST à l'URL /api/auth/login
+                        .contentType(MediaType.APPLICATION_JSON) // Définit le type de contenu de la requête à JSON
+                        .content(jsonLoginRequest)) // Définit le contenu de la requête à la requête de connexion en JSON
+                // Then
+                .andExpect(status().isOk()) // Vérifie que le statut de la réponse est 200 (OK)
+                .andExpect(jsonPath("$.token", is(notNullValue()))); // Vérifie que le token dans la réponse n'est pas null
     }
 
+    @Test // Indique que c'est une méthode de test
+    public void testRegister_BadRequest() throws Exception {
+        // Given : Une requête d'inscription avec des informations invalides
+        // Crée une requête d'inscription sans prénom, sans nom, avec un email invalide et un mot de passe trop court
+        SignupRequest signupRequest = new SignupRequest();
+        signupRequest.setEmail("invalid");
+        signupRequest.setPassword("123");
+        // Convertit la requête d'inscription en JSON
+        String jsonSignupRequest = new ObjectMapper().writeValueAsString(signupRequest);
+        // When
+        mockMvc.perform(post("/api/auth/register") // Effectue une requête POST à l'URL /api/auth/register
+                        .contentType(MediaType.APPLICATION_JSON) // Définit le type de contenu de la requête à JSON
+                        .content(jsonSignupRequest)) // Définit le contenu de la requête à la requête d'inscription en JSON
+                // Then
+                .andExpect(status().isBadRequest()); // Vérifie que le statut de la réponse est 400 (Bad Request)
+
+    }
+
+    @Test
+    public void testRegister_Unauthorized() throws Exception {
+        // Given : Une requête register avec des informations invalides
+        SignupRequest signupRequest = new SignupRequest();
+        signupRequest.setEmail("bad@email.com");
+        signupRequest.setPassword("ceci est un faux password");
+        String jsonSignupRequest = new ObjectMapper().writeValueAsString(signupRequest);
+        // When
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonSignupRequest))
+                // Then
+                .andExpect(status().isUnauthorized());
+    }
+
+    
 
 
 

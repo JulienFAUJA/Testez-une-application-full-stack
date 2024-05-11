@@ -6,6 +6,7 @@ import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.fixtures.SessionFixture;
 import com.openclassrooms.starterjwt.mapper.SessionMapper;
 import com.openclassrooms.starterjwt.models.Session;
+import com.openclassrooms.starterjwt.repository.SessionRepository;
 import com.openclassrooms.starterjwt.services.SessionService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
@@ -42,6 +43,9 @@ public class SessionControllerIntegrTest {
 
     @MockBean
     private SessionMapper sessionMapper;
+
+    @MockBean
+    private SessionRepository sessionRepository;
 
     @Test
     @WithMockUser
@@ -136,6 +140,8 @@ public class SessionControllerIntegrTest {
             when(sessionMapper.toEntity(sessionDto)).thenReturn(session);
             when(sessionService.create(any())).thenReturn(session);
             when(sessionMapper.toDto(session)).thenReturn(sessionDto);
+
+            when(sessionRepository.save(session)).thenReturn(session);
 
 
             mockMvc.perform(post("/api/session")

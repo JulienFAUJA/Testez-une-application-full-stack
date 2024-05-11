@@ -20,8 +20,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 public class SessionControllerTest {
 
@@ -46,7 +44,6 @@ public class SessionControllerTest {
 
 
     @Test
-    @WithMockUser
     void shouldFindById_SessionExists() {
         // Arrange
         Long sessionId = 1L;
